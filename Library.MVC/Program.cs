@@ -1,6 +1,7 @@
 using Library.MVC.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Library.MVC.Data.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,4 +86,11 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    SeedData.Initialize(context);
+}
+
 app.Run();
+
