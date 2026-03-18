@@ -14,19 +14,22 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Book)
+                Book
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Member)
+                Member
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LoanDate)
+                Loan Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DueDate)
+                Due Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReturnedDate)
+                Returned Date
+            </th>
+            <th>
+                Status
             </th>
             <th></th>
         </tr>
@@ -50,6 +53,20 @@
                 @Html.DisplayFor(modelItem => item.ReturnedDate)
             </td>
             <td>
+                    @if (item.ReturnedDate != null)
+                    {
+                        <span class="badge bg-success">Returned</span>
+                    }
+                    else if (DateTime.Now > item.DueDate)
+                    {
+                        <span class="badge bg-danger">Overdue</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Active</span>
+                    }
+             </td>
+                <td>
                     @if (User.IsInRole("Admin"))
                     {
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
@@ -64,7 +81,7 @@
                     {
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                     }
-            </td>
+                </td>
         </tr>
 }
     </tbody>
