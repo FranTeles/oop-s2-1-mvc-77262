@@ -6,9 +6,10 @@
 
 <h1>Index</h1>
 
-<p>
+@if (User.IsInRole("Admin"))
+{
     <a asp-action="Create">Create New</a>
-</p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -49,10 +50,20 @@
                 @Html.DisplayFor(modelItem => item.ReturnedDate)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    <a asp-action="ReturnBook" asp-route-id="@item.Id">Return</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <text> | </text>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <text> | </text>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <text> | </text>
+                        <a asp-action="ReturnBook" asp-route-id="@item.Id">Return</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    }
             </td>
         </tr>
 }

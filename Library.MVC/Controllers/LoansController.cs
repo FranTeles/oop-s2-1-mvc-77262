@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -51,9 +52,14 @@ namespace Library.MVC.Controllers
         }
 
         // GET: Loans/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Title");
+            ViewData["BookId"] = new SelectList(
+                _context.Books.Where(b => b.IsAvailable),
+                "Id",
+                "Title"
+            );
             ViewData["MemberId"] = new SelectList(_context.Members, "Id", "FullName");
             return View();
         }
@@ -61,6 +67,7 @@ namespace Library.MVC.Controllers
         // POST: Loans/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,BookId,MemberId,LoanDate,DueDate,ReturnedDate")] Loan loan)
         {
             var activeLoan = await _context.Loans
@@ -85,12 +92,18 @@ namespace Library.MVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Title", loan.BookId);
+            ViewData["BookId"] = new SelectList(
+                _context.Books.Where(b => b.IsAvailable),
+                "Id",
+                "Title",
+                loan.BookId
+            );
             ViewData["MemberId"] = new SelectList(_context.Members, "Id", "FullName", loan.MemberId);
             return View(loan);
         }
 
         // GET: Loans/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -113,6 +126,7 @@ namespace Library.MVC.Controllers
         // POST: Loans/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,BookId,MemberId,LoanDate,DueDate,ReturnedDate")] Loan loan)
         {
             if (id != loan.Id)
@@ -148,6 +162,7 @@ namespace Library.MVC.Controllers
         }
 
         // GET: Loans/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -171,6 +186,7 @@ namespace Library.MVC.Controllers
         // POST: Loans/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var loan = await _context.Loans.FindAsync(id);
@@ -189,6 +205,7 @@ namespace Library.MVC.Controllers
             return _context.Loans.Any(e => e.Id == id);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ReturnBook(int id)
         {
             var loan = await _context.Loans
