@@ -37,7 +37,7 @@ It allows users to manage books, members, and loans in a simple library system.
 1. Clone the repository
 2. Open in Visual Studio
 3. Run the following commands:
-
+- Update-Database
 4. Run the project
 
 ---
@@ -52,7 +52,8 @@ It allows users to manage books, members, and loans in a simple library system.
 ## Testing
 
 Run tests using:
-
+- dotnet test
+  
 ---
 
 ## CI/CD
